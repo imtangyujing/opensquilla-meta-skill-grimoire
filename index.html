@@ -98,8 +98,8 @@
   /* ===== 书本 ===== */
   .book-wrap{
     position:relative;
-    width:1100px;max-width:95vw;
-    height:640px;max-height:85vh;
+    width:1800px;max-width:95vw;
+    height:900px;max-height:86vh;
     opacity:0;transition:opacity .8s;margin-top:0;
   }
   .book-wrap.show{opacity:1;}
@@ -118,7 +118,7 @@
   .page-face{
     position:absolute;inset:0;
     backface-visibility:hidden;
-    padding:32px 36px;
+    padding:48px 50px;
     overflow-y:auto;
     display:flex;flex-direction:column;
   }
@@ -144,13 +144,13 @@
   /* ===== 导航栏 ===== */
   .nav-bar{
     display:flex;align-items:center;justify-content:center;
-    gap:14px;margin-top:10px;z-index:50;
+    gap:18px;margin-top:14px;z-index:50;
     opacity:0;transition:opacity .8s;transition-delay:.3s;
-    width:1100px;max-width:95vw;
+    width:1800px;max-width:95vw;
   }
   .nav-bar.show{opacity:1;}
   .nav-btn{
-    padding:8px 20px;font-size:13px;
+    padding:10px 24px;font-size:15px;
     background:rgba(155,229,255,.08);
     color:#9be5ff;border:1px solid rgba(155,229,255,.3);border-radius:20px;
     cursor:pointer;letter-spacing:2px;
@@ -158,9 +158,9 @@
   }
   .nav-btn:hover{background:rgba(155,229,255,.2);box-shadow:0 0 15px rgba(155,229,255,.3);}
   .nav-btn:disabled{opacity:.25;cursor:not-allowed;}
-  .page-indicator{font-size:12px;color:#a8a8d0;letter-spacing:1px;white-space:nowrap;min-width:60px;text-align:center;}
+  .page-indicator{font-size:14px;color:#a8a8d0;letter-spacing:1px;white-space:nowrap;min-width:68px;text-align:center;}
   /* 进度条滑块 */
-  .slider-wrap{flex:1;display:flex;align-items:center;gap:8px;max-width:360px;}
+  .slider-wrap{flex:1;display:flex;align-items:center;gap:10px;max-width:460px;}
   .slider-wrap label{font-size:11px;color:#6a6a90;white-space:nowrap;}
   .slider{
     -webkit-appearance:none;appearance:none;
@@ -183,51 +183,51 @@
   }
 
   /* ===== 技能页样式 ===== */
-  .skill-header{display:flex;align-items:center;gap:14px;margin-bottom:14px;flex-shrink:0;}
-  .skill-icon{font-size:44px;filter:drop-shadow(0 0 12px currentColor);animation:floatGlow 3s infinite ease-in-out;flex-shrink:0;}
+  .skill-header{display:flex;align-items:center;gap:18px;margin-bottom:18px;flex-shrink:0;}
+  .skill-icon{font-size:56px;filter:drop-shadow(0 0 12px currentColor);animation:floatGlow 3s infinite ease-in-out;flex-shrink:0;}
   .skill-info{flex:1;min-width:0;}
   .skill-name{
-    font-size:24px;font-weight:bold;
+    font-size:32px;font-weight:bold;
     background:linear-gradient(135deg,#9be5ff,#c39bff);
     -webkit-background-clip:text;background-clip:text;color:transparent;
   }
-  .skill-cn{font-size:13px;color:#a8a8d0;letter-spacing:2px;}
+  .skill-cn{font-size:15px;color:#a8a8d0;letter-spacing:3px;}
   .skill-desc{
-    font-size:15px;line-height:1.8;color:#d8d8f0;
-    padding:14px 16px;border-left:3px solid #9be5ff;
+    font-size:18px;line-height:1.9;color:#d8d8f0;
+    padding:18px 20px;border-left:4px solid #9be5ff;
     background:rgba(155,229,255,.04);border-radius:0 6px 6px 0;
-    margin-bottom:12px;flex-shrink:0;
+    margin-bottom:16px;flex-shrink:0;
   }
   .skill-spell{
-    font-size:14px;color:#ffd86b;padding:12px 14px;
+    font-size:17px;color:#ffd86b;padding:15px 18px;
     background:rgba(255,216,107,.04);
     border:1px dashed rgba(255,216,107,.35);border-radius:6px;
-    font-style:italic;line-height:1.6;flex-shrink:0;
+    font-style:italic;line-height:1.7;flex-shrink:0;
   }
   .skill-forbidden{
-    font-size:13px;color:#ff6b9b;padding:12px 14px;margin-top:10px;
+    font-size:16px;color:#ff6b9b;padding:14px 18px;margin-top:12px;
     background:rgba(255,107,155,.05);
     border:1px solid rgba(255,107,155,.2);border-radius:6px;
     line-height:1.5;flex-shrink:0;
   }
-  .skill-page-layout{height:100%;display:flex;flex-direction:column;padding-bottom:34px;}
+  .skill-page-layout{height:100%;display:flex;flex-direction:column;padding-bottom:42px;}
   .skill-left-layout .mechanism-block{
-    margin-top:auto;padding:12px 13px;
+    margin-top:auto;padding:15px 17px;
     background:rgba(195,155,255,.035);
     border:1px solid rgba(195,155,255,.13);border-radius:6px;
   }
-  .skill-left-layout .mechanism-text{font-size:13px;line-height:1.65;}
+  .skill-left-layout .mechanism-text{font-size:16px;line-height:1.7;}
   .skill-right-layout .energy-section{margin-top:8px;}
-  .skill-right-layout .energy-bar{margin-bottom:10px;}
-  .skill-right-layout .energy-track{height:8px;}
-  .skill-right-layout .io-block{margin-top:20px;padding:12px 14px;}
-  .skill-right-layout .io-row{font-size:13px;line-height:1.75;}
+  .skill-right-layout .energy-bar{margin-bottom:13px;}
+  .skill-right-layout .energy-track{height:9px;}
+  .skill-right-layout .io-block{margin-top:24px;padding:15px 18px;}
+  .skill-right-layout .io-row{font-size:16px;line-height:1.8;}
   .skill-right-layout .skill-forbidden{margin-top:auto;margin-bottom:8px;}
 
   /* 能量条 - 右页 */
   .energy-section{margin-top:2px;flex-shrink:0;}
   .section-title{
-    font-size:15px;color:#9be5ff;margin-bottom:8px;
+    font-size:20px;color:#9be5ff;margin-bottom:14px;
     letter-spacing:2px;display:flex;align-items:center;gap:8px;
   }
   .section-title::before,.section-title::after{
@@ -237,7 +237,7 @@
   .energy-bar{margin-bottom:5px;}
   .energy-label{
     display:flex;justify-content:space-between;
-    font-size:12px;color:#c8c8e8;margin-bottom:3px;
+    font-size:15px;color:#c8c8e8;margin-bottom:4px;
   }
   .energy-track{
     height:6px;background:rgba(255,255,255,.05);
@@ -264,17 +264,42 @@
     border:1px solid rgba(107,255,184,.16);
     border-radius:6px;flex-shrink:0;
   }
-  .mechanism-title{font-size:12px;color:#6bffb8;font-weight:bold;margin-bottom:4px;letter-spacing:1px;}
+  .mechanism-title{font-size:16px;color:#6bffb8;font-weight:bold;margin-bottom:7px;letter-spacing:2px;}
   .mechanism-text{font-size:12px;line-height:1.55;color:#d8d8f0;}
-  .ingredient-block{margin-top:11px;flex-shrink:0;}
+  .ingredient-block{margin-top:14px;flex-shrink:0;}
   .ingredient-title{font-size:12px;color:#c39bff;font-weight:bold;margin-bottom:6px;letter-spacing:1px;}
-  .ingredient-flow{display:flex;align-items:center;flex-wrap:wrap;gap:5px 4px;}
+  .ingredient-flow{display:flex;align-items:center;flex-wrap:wrap;gap:7px 5px;}
   .ingredient{
-    padding:5px 8px;border-radius:5px;font-size:10px;line-height:1.25;color:#e6ddff;
+    padding:6px 10px;border-radius:5px;font-size:12px;line-height:1.3;color:#e6ddff;
     background:linear-gradient(135deg,rgba(195,155,255,.15),rgba(155,229,255,.06));
     border:1px solid rgba(195,155,255,.28);box-shadow:0 0 8px rgba(195,155,255,.08);
   }
-  .ingredient-arrow{font-size:11px;color:#9be5ff;text-shadow:0 0 8px rgba(155,229,255,.8);}
+  .ingredient-arrow{font-size:14px;color:#9be5ff;text-shadow:0 0 8px rgba(155,229,255,.8);}
+
+  @media (max-width:1100px), (max-height:820px){
+    .page-face{padding:32px 36px;}
+    .skill-header{gap:14px;margin-bottom:14px;}
+    .skill-icon{font-size:44px;}
+    .skill-name{font-size:24px;}
+    .skill-cn{font-size:13px;letter-spacing:2px;}
+    .skill-desc{font-size:15px;line-height:1.8;padding:14px 16px;margin-bottom:12px;border-left-width:3px;}
+    .skill-spell{font-size:14px;padding:12px 14px;line-height:1.6;}
+    .skill-forbidden{font-size:13px;padding:12px 14px;}
+    .skill-page-layout{padding-bottom:34px;}
+    .skill-left-layout .mechanism-block{padding:12px 13px;}
+    .skill-left-layout .mechanism-text{font-size:13px;line-height:1.65;}
+    .skill-right-layout .energy-bar{margin-bottom:10px;}
+    .skill-right-layout .energy-track{height:8px;}
+    .skill-right-layout .io-block{margin-top:20px;padding:12px 14px;}
+    .skill-right-layout .io-row{font-size:13px;line-height:1.75;}
+    .section-title{font-size:15px;margin-bottom:8px;}
+    .energy-label{font-size:12px;margin-bottom:3px;}
+    .mechanism-title{font-size:12px;margin-bottom:4px;letter-spacing:1px;}
+    .ingredient-block{margin-top:11px;}
+    .ingredient-flow{gap:5px 4px;}
+    .ingredient{padding:5px 8px;font-size:10px;}
+    .ingredient-arrow{font-size:11px;}
+  }
 
   /* TOC */
   .toc-title{
