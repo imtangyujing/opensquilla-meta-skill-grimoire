@@ -212,22 +212,22 @@
   }
 
   /* 能量条 - 右页 */
-  .energy-section{margin-top:4px;flex-shrink:0;}
+  .energy-section{margin-top:2px;flex-shrink:0;}
   .section-title{
-    font-size:16px;color:#9be5ff;margin-bottom:12px;
+    font-size:15px;color:#9be5ff;margin-bottom:8px;
     letter-spacing:2px;display:flex;align-items:center;gap:8px;
   }
   .section-title::before,.section-title::after{
     content:'';flex:1;height:1px;
     background:linear-gradient(90deg,transparent,#9be5ff,transparent);
   }
-  .energy-bar{margin-bottom:8px;}
+  .energy-bar{margin-bottom:5px;}
   .energy-label{
     display:flex;justify-content:space-between;
     font-size:12px;color:#c8c8e8;margin-bottom:3px;
   }
   .energy-track{
-    height:8px;background:rgba(255,255,255,.05);
+    height:6px;background:rgba(255,255,255,.05);
     border-radius:4px;overflow:hidden;position:relative;
     border:1px solid rgba(155,229,255,.15);
   }
@@ -238,13 +238,28 @@
     width:0;transition:width 1.5s ease-out;
   }
   .io-block{
-    margin-top:10px;padding:10px 12px;
+    margin-top:7px;padding:7px 10px;
     background:rgba(195,155,255,.04);
     border:1px solid rgba(195,155,255,.15);
     border-radius:6px;flex-shrink:0;
   }
-  .io-row{font-size:13px;line-height:1.7;color:#d8d8f0;}
+  .io-row{font-size:12px;line-height:1.55;color:#d8d8f0;}
   .io-row b{color:#ffd86b;margin-right:6px;}
+  .mechanism-block{
+    margin-top:7px;padding:8px 10px;
+    background:rgba(107,255,184,.035);
+    border:1px solid rgba(107,255,184,.16);
+    border-radius:6px;flex-shrink:0;
+  }
+  .mechanism-title{font-size:12px;color:#6bffb8;font-weight:bold;margin-bottom:4px;letter-spacing:1px;}
+  .mechanism-text{font-size:12px;line-height:1.55;color:#d8d8f0;}
+  .ingredient-block{margin-top:7px;flex-shrink:0;}
+  .ingredient-title{font-size:12px;color:#c39bff;font-weight:bold;margin-bottom:5px;letter-spacing:1px;}
+  .ingredient-list{display:flex;flex-wrap:wrap;gap:4px;}
+  .ingredient{
+    padding:3px 6px;border-radius:10px;font-size:10px;color:#d8d8f0;
+    background:rgba(195,155,255,.08);border:1px solid rgba(195,155,255,.18);
+  }
 
   /* TOC */
   .toc-title{
@@ -425,6 +440,8 @@ const skills = [
     energy:{'🔍搜索':40,'🧠动脑':90,'✍️写作':50,'🎨创意':80,'👁️观察':30,'🗣️沟通':20},
     inputs:'一个新技能的"配方"想法',
     outputs:'一个可以在AI里用的新咒语（技能卡）',
+    mechanism:'先理解你想造什么，再从历史经验中挑选合适模板，填入步骤、检查重名与风险，最后经过校验和试运行，生成一张可确认的新技能卡。',
+    ingredients:['history-explorer','模板填槽','风险分级','lint 校验','smoke test','runtime e2e'],
     forbidden:'不要让AI自己创造太多复杂咒语！每次新咒语都要你亲自确认名字和用途。'
   },
   {
@@ -435,16 +452,20 @@ const skills = [
     energy:{'🔍搜索':95,'🧠动脑':70,'✍️写作':80,'🎨创意':40,'👁️观察':60,'🗣️沟通':10},
     inputs:'你想研究的主题 + 要搜哪些关键词',
     outputs:'一份整整齐齐的调研报告',
+    mechanism:'先确定报告范围和资料种子，再搜索、筛选信源、深入研究、搭提纲、逐条核对“结论来自哪里”，最后经过质量审校输出报告。',
+    ingredients:['multi-search-engine','deep-research','信源质量检查','source-to-claim','docx'],
     forbidden:'不能查别人的隐私！不能闯进需要密码的网站！不能编造假信息！'
   },
   {
     id:'watch',icon:'🦉',color:'#ffd86b',
-    name:'守望之眼',cn:'meta-account-watch',
+    name:'守望之眼',cn:'meta-competitive-intel',
     desc:'你想盯住某个东西，看它有没有变化？比如喜欢的博主有没有更新？这个咒语会像一只忠诚的猫头鹰，每天蹲在树梢上帮你盯着，一有变化就告诉你！',
     spell:'"日月轮转，万物更迭——吾眼如炬，寸变必察。"',
     energy:{'🔍搜索':60,'🧠动脑':60,'✍️写作':30,'🎨创意':20,'👁️观察':100,'🗣️沟通':10},
     inputs:'你想观察的公司、账号或竞品是谁',
     outputs:'一份变化追踪报告（什么变了、什么时候变的）',
+    mechanism:'把目标拆成价格、产品、团队、招聘和新闻等维度，检索公开信息，与上次基线比较，提取可信信号，再按强弱给出下一步行动。',
+    ingredients:['multi-search-engine','deep-research','memory','基线对比','xlsx','docx'],
     forbidden:'不要用它偷看别人的隐私！只能观察公开的信息！'
   },
   {
@@ -455,6 +476,8 @@ const skills = [
     energy:{'🔍搜索':50,'🧠动脑':60,'✍️写作':70,'🎨创意':30,'👁️观察':50,'🗣️沟通':40},
     inputs:'你的日历、邮件、待办清单',
     outputs:'一份今天的行动简报',
+    mechanism:'先读懂今天的范围和时区，再合并待办、日历与已知偏好，补充天气和公开资讯，最后排出前三优先级、时间块、风险和跟进对象。',
+    ingredients:['weather','multi-search-engine','memory','日历连接器（可选）','邮件连接器（可选）'],
     forbidden:'不要把太私密的事情写进简报！看清内容再分享！'
   },
   {
@@ -465,6 +488,8 @@ const skills = [
     energy:{'🔍搜索':30,'🧠动脑':100,'✍️写作':80,'🎨创意':30,'👁️观察':60,'🗣️沟通':20},
     inputs:'一份需要分析的文档',
     outputs:'决策建议 + 它为什么这么想',
+    mechanism:'先识别 PDF、Word、表格或粘贴文字，再抽取金额、日期、义务和矛盾点，整理证据表与风险等级，最后给出未来 24 小时可执行动作。',
+    ingredients:['pdf-toolkit','docx','xlsx','证据表','风险审查','最终审校'],
     forbidden:'重要的决定要让大人一起拿主意！AI只是给建议，不是替你拍板！'
   },
   {
@@ -475,6 +500,8 @@ const skills = [
     energy:{'🔍搜索':40,'🧠动脑':50,'✍️写作':50,'🎨创意':70,'👁️观察':30,'🗣️沟通':90},
     inputs:'家庭成员 + 空闲时间 + 想做的事情',
     outputs:'一份全家一天的活动日程表',
+    mechanism:'这是轻量协调流程：收集每个人的时间、偏好与限制，找出冲突，组合候选活动，排成一份留有缓冲的日程，再交给全家确认。',
+    ingredients:['偏好收集','约束检查','活动组合','时间缓冲','家人确认'],
     forbidden:'别忘了跟真实家人确认！AI排的计划只是建议。安全第一！'
   },
   {
@@ -485,6 +512,8 @@ const skills = [
     energy:{'🔍搜索':80,'🧠动脑':70,'✍️写作':90,'🎨创意':40,'👁️观察':50,'🗣️沟通':60},
     inputs:'你想做什么工作 + 你会什么',
     outputs:'求职进度跟踪 + 简历建议',
+    mechanism:'先判断是改简历、准备面试、比较岗位还是整理进度，再研究公司与岗位，把事实记到账本中，生成求职材料，并保留人工确认关口。',
+    ingredients:['multi-search-engine','deep-research','memory','docx','xlsx','pptx'],
     forbidden:'不能让它替你投简历！每份申请都要自己最后确认！'
   },
   {
@@ -495,6 +524,8 @@ const skills = [
     energy:{'🔍搜索':30,'🧠动脑':60,'✍️写作':60,'🎨创意':90,'👁️观察':40,'🗣️沟通':50},
     inputs:'你想做的项目 / 活动的点子',
     outputs:'一份适合小孩的步骤计划书',
+    mechanism:'先检查点子是否安全可行，再查资料和天气，拆成简单步骤、材料清单与学习目标；需要时还能做成演示页和词汇卡。',
+    ingredients:['multi-search-engine','weather','deep-research','memory','pptx','安全检查'],
     forbidden:'不能让它帮你写作业！它是帮你规划，不是替你完成！'
   },
   {
@@ -505,6 +536,8 @@ const skills = [
     energy:{'🔍搜索':90,'🧠动脑':90,'✍️写作':100,'🎨创意':50,'👁️观察':50,'🗣️沟通':20},
     inputs:'论文题目 + 要参考的资料',
     outputs:'一篇学术论文（含格式）',
+    mechanism:'先明确题目和偏好，搜索论文并整理参考文献，再规划研究问题、图表和引用位置，分章节写作，最后合并成一致的论文稿。',
+    ingredients:['multi-search-engine','paper-refbib-stub','paper-section-author','引用规划','章节一致性检查'],
     forbidden:'学校里一般不许AI直接写论文，一定要先问老师！只能帮忙不能代写！'
   }
 ];
@@ -614,6 +647,14 @@ function renderPage(data,pageNum){
       <div class="io-block">
         <div class="io-row"><b>📥 材料（输入）：</b>${s.inputs}</div>
         <div class="io-row"><b>📤 产物（输出）：</b>${s.outputs}</div>
+      </div>
+      <div class="mechanism-block">
+        <div class="mechanism-title">🧩 魔 法 原 理</div>
+        <div class="mechanism-text">${s.mechanism}</div>
+      </div>
+      <div class="ingredient-block">
+        <div class="ingredient-title">🧪 原 Skill 组 件</div>
+        <div class="ingredient-list">${s.ingredients.map(item=>`<span class="ingredient">${item}</span>`).join('')}</div>
       </div>${pg}`;
   }
   if(data.type==='quiz-l'){
@@ -683,7 +724,7 @@ function updatePages(){
 function flipNext(){if(currentSpread<sheets.length-1){currentSpread++;updatePages();}}
 function flipPrev(){if(currentSpread>1){currentSpread--;updatePages();}}
 function jumpTo(pageNum){
-  currentSpread=Math.floor(pageNum/2);
+  currentSpread=Math.ceil(pageNum/2);
   updatePages();
 }
 function sliderChange(val){
