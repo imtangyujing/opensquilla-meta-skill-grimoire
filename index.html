@@ -253,13 +253,15 @@
   }
   .mechanism-title{font-size:12px;color:#6bffb8;font-weight:bold;margin-bottom:4px;letter-spacing:1px;}
   .mechanism-text{font-size:12px;line-height:1.55;color:#d8d8f0;}
-  .ingredient-block{margin-top:7px;flex-shrink:0;}
-  .ingredient-title{font-size:12px;color:#c39bff;font-weight:bold;margin-bottom:5px;letter-spacing:1px;}
-  .ingredient-list{display:flex;flex-wrap:wrap;gap:4px;}
+  .ingredient-block{margin-top:9px;flex-shrink:0;}
+  .ingredient-title{font-size:12px;color:#c39bff;font-weight:bold;margin-bottom:6px;letter-spacing:1px;}
+  .ingredient-flow{display:flex;align-items:center;flex-wrap:wrap;gap:5px 4px;}
   .ingredient{
-    padding:3px 6px;border-radius:10px;font-size:10px;color:#d8d8f0;
-    background:rgba(195,155,255,.08);border:1px solid rgba(195,155,255,.18);
+    padding:4px 7px;border-radius:5px;font-size:10px;line-height:1.25;color:#e6ddff;
+    background:linear-gradient(135deg,rgba(195,155,255,.15),rgba(155,229,255,.06));
+    border:1px solid rgba(195,155,255,.28);box-shadow:0 0 8px rgba(195,155,255,.08);
   }
+  .ingredient-arrow{font-size:11px;color:#9be5ff;text-shadow:0 0 8px rgba(155,229,255,.8);}
 
   /* TOC */
   .toc-title{
@@ -430,17 +432,17 @@ for(let i=0;i<120;i++){
   starsBox.appendChild(s);
 }
 
-// ===== 9 个元技能 =====
+// ===== 8 个元技能 =====
 const skills = [
   {
     id:'creator',icon:'✨',color:'#9be5ff',
     name:'造技魔典',cn:'meta-skill-creator',
-    desc:'这个咒语是最厉害的秘密魔法之一！它能让你自己创造新的咒语！告诉它你想要一个什么样的小帮手，它就会"叮"的一声变出一个全新的技能给你！',
+    desc:'这个咒语是最厉害的秘密魔法之一！它会把已有的小咒语组合起来，创造一个会分步骤做事的新元技能。告诉它你想要什么样的小帮手，它会先做出技能卡让你确认！',
     spell:'"汝需新术？吾予之法——咒语之源，由尔创造！"',
     energy:{'🔍搜索':40,'🧠动脑':90,'✍️写作':50,'🎨创意':80,'👁️观察':30,'🗣️沟通':20},
-    inputs:'一个新技能的"配方"想法',
-    outputs:'一个可以在AI里用的新咒语（技能卡）',
-    mechanism:'先理解你想造什么，再从历史经验中挑选合适模板，填入步骤、检查重名与风险，最后经过校验和试运行，生成一张可确认的新技能卡。',
+    inputs:'一个需要多个小技能协作的"配方"想法',
+    outputs:'一个可确认的新元技能提案（技能卡）',
+    mechanism:'先确认你要组合哪些能力，再从历史经验中挑选模板，填入步骤、检查触发词冲突与风险，最后经过校验和试运行，生成可确认的元技能提案。',
     ingredients:['history-explorer','模板填槽','风险分级','lint 校验','smoke test','runtime e2e'],
     forbidden:'不要让AI自己创造太多复杂咒语！每次新咒语都要你亲自确认名字和用途。'
   },
@@ -459,11 +461,11 @@ const skills = [
   {
     id:'watch',icon:'🦉',color:'#ffd86b',
     name:'守望之眼',cn:'meta-competitive-intel',
-    desc:'你想盯住某个东西，看它有没有变化？比如喜欢的博主有没有更新？这个咒语会像一只忠诚的猫头鹰，每天蹲在树梢上帮你盯着，一有变化就告诉你！',
+    desc:'想观察公司、竞品、客户或合作伙伴有没有新动作？这个咒语会检查公开信息，把价格、产品、团队和新闻中的变化整理成一份情报简报！',
     spell:'"日月轮转，万物更迭——吾眼如炬，寸变必察。"',
     energy:{'🔍搜索':60,'🧠动脑':60,'✍️写作':30,'🎨创意':20,'👁️观察':100,'🗣️沟通':10},
-    inputs:'你想观察的公司、账号或竞品是谁',
-    outputs:'一份变化追踪报告（什么变了、什么时候变的）',
+    inputs:'目标公司 / 竞品 + 时间范围 + 想观察的维度',
+    outputs:'公开信号简报 + 基线变化 + 跟进行动',
     mechanism:'把目标拆成价格、产品、团队、招聘和新闻等维度，检索公开信息，与上次基线比较，提取可信信号，再按强弱给出下一步行动。',
     ingredients:['multi-search-engine','deep-research','memory','基线对比','xlsx','docx'],
     forbidden:'不要用它偷看别人的隐私！只能观察公开的信息！'
@@ -493,18 +495,6 @@ const skills = [
     forbidden:'重要的决定要让大人一起拿主意！AI只是给建议，不是替你拍板！'
   },
   {
-    id:'family',icon:'🏠',color:'#ff9bd6',
-    name:'一家之主咒',cn:'meta-family-day-coordinator',
-    desc:'周末到了，不知道全家去哪玩？这个咒语像一位贴心的小管家，会问每个人想去做什么，然后排出一个大家都满意的全天计划！',
-    spell:'"吾家有约，众口难调——汝心所愿，吾皆安排。"',
-    energy:{'🔍搜索':40,'🧠动脑':50,'✍️写作':50,'🎨创意':70,'👁️观察':30,'🗣️沟通':90},
-    inputs:'家庭成员 + 空闲时间 + 想做的事情',
-    outputs:'一份全家一天的活动日程表',
-    mechanism:'这是轻量协调流程：收集每个人的时间、偏好与限制，找出冲突，组合候选活动，排成一份留有缓冲的日程，再交给全家确认。',
-    ingredients:['偏好收集','约束检查','活动组合','时间缓冲','家人确认'],
-    forbidden:'别忘了跟真实家人确认！AI排的计划只是建议。安全第一！'
-  },
-  {
     id:'job',icon:'🚀',color:'#6bffb8',
     name:'求职航路咒',cn:'meta-job-search-pipeline',
     desc:'这个咒语是为你爸爸妈妈准备的（当然你以后也用得上）！找工作的时候，它会帮你管理简历、搜索工作、跟踪面试，就像闯关游戏一样！',
@@ -531,13 +521,13 @@ const skills = [
   {
     id:'paper',icon:'📖',color:'#c39bff',
     name:'论文召唤咒',cn:'meta-paper-write',
-    desc:'这个咒语是給大哥哥大姐姐上大学用的！写论文的时候，它可以帮你搜资料、理思路、写出漂亮的学术文章。你现在可以先收藏，以后用得上！',
+    desc:'这个咒语是给大哥哥大姐姐做学术研究用的！它会搜资料、规划引用、分章节写作，还能在需要时整理成 LaTeX 和 PDF 论文稿。你现在可以先收藏！',
     spell:'"学海无涯，纸笔为舟——引经据典，自成文章。"',
     energy:{'🔍搜索':90,'🧠动脑':90,'✍️写作':100,'🎨创意':50,'👁️观察':50,'🗣️沟通':20},
     inputs:'论文题目 + 要参考的资料',
-    outputs:'一篇学术论文（含格式）',
-    mechanism:'先明确题目和偏好，搜索论文并整理参考文献，再规划研究问题、图表和引用位置，分章节写作，最后合并成一致的论文稿。',
-    ingredients:['multi-search-engine','paper-refbib-stub','paper-section-author','引用规划','章节一致性检查'],
+    outputs:'论文草稿 / LaTeX 稿 / PDF 稿',
+    mechanism:'先明确题目和偏好，搜索论文并整理参考文献，再规划研究问题、图表和引用位置，分章节写作，最后检查一致性并按需要编译 LaTeX / PDF。',
+    ingredients:['multi-search-engine','paper-refbib-stub','paper-section-author','引用规划','一致性检查','LaTeX / PDF'],
     forbidden:'学校里一般不许AI直接写论文，一定要先问老师！只能帮忙不能代写！'
   }
 ];
@@ -561,7 +551,6 @@ const quizQs = [
       {t:'🦉 我想盯着某个东西看它变没变',skill:'watch'},
       {t:'📋 我需要一份今天的行动清单',skill:'brief'},
       {t:'📜 我有一份很长的文档需要分析',skill:'decision'},
-      {t:'🏠 我想安排全家人出去玩一天',skill:'family'},
       {t:'🚀 我在找工作 / 或者帮爸妈找',skill:'job'},
       {t:'🎯 我有学校项目 / 活动要规划',skill:'kid'},
       {t:'📖 我需要写论文 / 学术文章',skill:'paper'},
@@ -572,8 +561,8 @@ const quizQs = [
 // ===== 构建页面 =====
 const pagesData=[];
 pagesData.push({type:'blank'});
-pagesData.push({type:'toc',start:0,end:5,title:'📜 咒 语 目 录 · 壹'});
-pagesData.push({type:'toc',start:5,end:skills.length,title:'📜 咒 语 目 录 · 贰',showQuiz:true});
+pagesData.push({type:'toc',start:0,end:4,title:'📜 咒 语 目 录 · 壹'});
+pagesData.push({type:'toc',start:4,end:skills.length,title:'📜 咒 语 目 录 · 贰'});
 skills.forEach(s=>{
   pagesData.push({type:'skill-l',skill:s});
   pagesData.push({type:'skill-r',skill:s});
@@ -631,7 +620,14 @@ function renderPage(data,pageNum){
       </div>
       <div class="skill-desc">${s.desc}</div>
       <div class="skill-spell">${s.spell}</div>
-      <div class="skill-forbidden">⚠️ ${s.forbidden}</div>${pg}`;
+      <div class="mechanism-block">
+        <div class="mechanism-title">🧩 魔 法 原 理</div>
+        <div class="mechanism-text">${s.mechanism}</div>
+      </div>
+      <div class="ingredient-block">
+        <div class="ingredient-title">🧪 元 Skill 流 程 图</div>
+        <div class="ingredient-flow">${s.ingredients.map((item,index)=>`${index?'<span class="ingredient-arrow">➜</span>':''}<span class="ingredient">${item}</span>`).join('')}</div>
+      </div>${pg}`;
   }
   if(data.type==='skill-r'){
     const s=data.skill;
@@ -648,14 +644,7 @@ function renderPage(data,pageNum){
         <div class="io-row"><b>📥 材料（输入）：</b>${s.inputs}</div>
         <div class="io-row"><b>📤 产物（输出）：</b>${s.outputs}</div>
       </div>
-      <div class="mechanism-block">
-        <div class="mechanism-title">🧩 魔 法 原 理</div>
-        <div class="mechanism-text">${s.mechanism}</div>
-      </div>
-      <div class="ingredient-block">
-        <div class="ingredient-title">🧪 原 Skill 组 件</div>
-        <div class="ingredient-list">${s.ingredients.map(item=>`<span class="ingredient">${item}</span>`).join('')}</div>
-      </div>${pg}`;
+      <div class="skill-forbidden">⚠️ ${s.forbidden}</div>${pg}`;
   }
   if(data.type==='quiz-l'){
     return `<div class="quiz-title">🔮 该用哪个咒语？</div>
@@ -765,12 +754,6 @@ function castSpell(){
       <div class="reveal-desc">${sk.desc}</div>
       <div class="reveal-spell">${sk.spell}</div>
       <div class="reveal-hint">✨ 想再测一次？点左边选项重新选吧 ✨</div>`;
-    // 滚动到右边可见
-    setTimeout(()=>{
-      // 找到当前的 quiz-r sheet 确保 reveal 可见
-      const quizSheetIdx=Math.floor((1+skills.length*2+1)/2); // page 20 → sheet 10
-      // 如果不在当前 spread，跳过去
-    },100);
   },600);
 }
 
