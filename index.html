@@ -205,11 +205,24 @@
     font-style:italic;line-height:1.6;flex-shrink:0;
   }
   .skill-forbidden{
-    font-size:13px;color:#ff6b9b;padding:10px 12px;margin-top:10px;
+    font-size:13px;color:#ff6b9b;padding:12px 14px;margin-top:10px;
     background:rgba(255,107,155,.05);
     border:1px solid rgba(255,107,155,.2);border-radius:6px;
     line-height:1.5;flex-shrink:0;
   }
+  .skill-page-layout{height:100%;display:flex;flex-direction:column;padding-bottom:34px;}
+  .skill-left-layout .mechanism-block{
+    margin-top:auto;padding:12px 13px;
+    background:rgba(195,155,255,.035);
+    border:1px solid rgba(195,155,255,.13);border-radius:6px;
+  }
+  .skill-left-layout .mechanism-text{font-size:13px;line-height:1.65;}
+  .skill-right-layout .energy-section{margin-top:8px;}
+  .skill-right-layout .energy-bar{margin-bottom:10px;}
+  .skill-right-layout .energy-track{height:8px;}
+  .skill-right-layout .io-block{margin-top:20px;padding:12px 14px;}
+  .skill-right-layout .io-row{font-size:13px;line-height:1.75;}
+  .skill-right-layout .skill-forbidden{margin-top:auto;margin-bottom:8px;}
 
   /* 能量条 - 右页 */
   .energy-section{margin-top:2px;flex-shrink:0;}
@@ -253,11 +266,11 @@
   }
   .mechanism-title{font-size:12px;color:#6bffb8;font-weight:bold;margin-bottom:4px;letter-spacing:1px;}
   .mechanism-text{font-size:12px;line-height:1.55;color:#d8d8f0;}
-  .ingredient-block{margin-top:9px;flex-shrink:0;}
+  .ingredient-block{margin-top:11px;flex-shrink:0;}
   .ingredient-title{font-size:12px;color:#c39bff;font-weight:bold;margin-bottom:6px;letter-spacing:1px;}
   .ingredient-flow{display:flex;align-items:center;flex-wrap:wrap;gap:5px 4px;}
   .ingredient{
-    padding:4px 7px;border-radius:5px;font-size:10px;line-height:1.25;color:#e6ddff;
+    padding:5px 8px;border-radius:5px;font-size:10px;line-height:1.25;color:#e6ddff;
     background:linear-gradient(135deg,rgba(195,155,255,.15),rgba(155,229,255,.06));
     border:1px solid rgba(195,155,255,.28);box-shadow:0 0 8px rgba(195,155,255,.08);
   }
@@ -611,7 +624,8 @@ function renderPage(data,pageNum){
   }
   if(data.type==='skill-l'){
     const s=data.skill;
-    return `<div class="skill-header">
+    return `<div class="skill-page-layout skill-left-layout">
+      <div class="skill-header">
         <div class="skill-icon" style="color:${s.color}">${s.icon}</div>
         <div class="skill-info">
           <div class="skill-name">${s.name}</div>
@@ -623,11 +637,11 @@ function renderPage(data,pageNum){
       <div class="mechanism-block">
         <div class="mechanism-title">🧩 魔 法 原 理</div>
         <div class="mechanism-text">${s.mechanism}</div>
+        <div class="ingredient-block">
+          <div class="ingredient-flow">${s.ingredients.map((item,index)=>`${index?'<span class="ingredient-arrow">➜</span>':''}<span class="ingredient">${item}</span>`).join('')}</div>
+        </div>
       </div>
-      <div class="ingredient-block">
-        <div class="ingredient-title">🧪 元 Skill 流 程 图</div>
-        <div class="ingredient-flow">${s.ingredients.map((item,index)=>`${index?'<span class="ingredient-arrow">➜</span>':''}<span class="ingredient">${item}</span>`).join('')}</div>
-      </div>${pg}`;
+    </div>${pg}`;
   }
   if(data.type==='skill-r'){
     const s=data.skill;
@@ -636,7 +650,8 @@ function renderPage(data,pageNum){
         <div class="energy-label"><span>${k}</span><span>${v}%</span></div>
         <div class="energy-track"><div class="energy-fill" data-w="${v}"></div></div>
       </div>`).join('');
-    return `<div class="energy-section">
+    return `<div class="skill-page-layout skill-right-layout">
+      <div class="energy-section">
         <div class="section-title">⚡ 能 量 配 比 ⚡</div>
         ${bars}
       </div>
@@ -644,7 +659,8 @@ function renderPage(data,pageNum){
         <div class="io-row"><b>📥 材料（输入）：</b>${s.inputs}</div>
         <div class="io-row"><b>📤 产物（输出）：</b>${s.outputs}</div>
       </div>
-      <div class="skill-forbidden">⚠️ ${s.forbidden}</div>${pg}`;
+      <div class="skill-forbidden">⚠️ ${s.forbidden}</div>
+    </div>${pg}`;
   }
   if(data.type==='quiz-l'){
     return `<div class="quiz-title">🔮 该用哪个咒语？</div>
