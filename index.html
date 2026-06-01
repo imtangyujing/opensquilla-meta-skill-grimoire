@@ -1,0 +1,745 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>⚡ OpenSquilla 元技能魔法书</title>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html,body{width:100%;height:100%;overflow:hidden;}
+  body{
+    font-family:'Songti SC','STKaiti','KaiTi','Microsoft YaHei',serif;
+    background:radial-gradient(ellipse at center,#0a0a2a 0%,#02020f 100%);
+    color:#e8e8ff;
+    display:flex;align-items:center;justify-content:center;
+    flex-direction:column;
+    perspective:2400px;
+  }
+  #stars{position:fixed;inset:0;pointer-events:none;z-index:0;}
+  .star{position:absolute;background:#fff;border-radius:50%;animation:twinkle 3s infinite ease-in-out;}
+  @keyframes twinkle{0%,100%{opacity:.2;}50%{opacity:.9;}}
+
+  /* ===== 封面 ===== */
+  .cover-screen{
+    position:absolute;inset:0;z-index:10;
+    display:flex;align-items:center;justify-content:center;flex-direction:column;text-align:center;gap:20px;
+    transition:opacity .8s,transform .8s;
+    background:radial-gradient(ellipse at 50% 40%, rgba(100,60,200,.2) 0%, transparent 60%),
+                radial-gradient(ellipse at 50% 60%, rgba(155,229,255,.1) 0%, transparent 50%),
+                radial-gradient(ellipse at center,#0a0a2a 0%,#02020f 100%);
+  }
+  .cover-screen.hidden{opacity:0;pointer-events:none;transform:scale(.85);}
+
+  .cover-art{
+    position:relative;width:200px;height:200px;margin-bottom:10px;
+  }
+  .cover-art-inner{
+    width:100%;height:100%;
+    border-radius:50%;
+    background:
+      radial-gradient(circle at 32% 25%,rgba(255,255,255,.95) 0%,rgba(255,255,255,.38) 8%,transparent 24%),
+      radial-gradient(circle at 50% 54%,rgba(155,229,255,.82) 0%,rgba(195,155,255,.72) 38%,rgba(90,45,190,.9) 72%,rgba(24,12,82,.95) 100%);
+    animation:spinSlow 10s linear infinite;
+    box-shadow:0 0 35px rgba(155,229,255,.8),0 0 90px rgba(195,155,255,.55),0 0 150px rgba(90,45,190,.35),inset -20px -24px 38px rgba(15,5,65,.58),inset 18px 16px 28px rgba(255,255,255,.2);
+  }
+  .cover-ring{
+    position:absolute;inset:-12px;border-radius:50%;
+    border:2px solid rgba(155,229,255,.2);
+    animation:spinSlow 15s linear infinite reverse;
+  }
+  .cover-ring2{
+    position:absolute;inset:-24px;border-radius:50%;
+    border:1px dashed rgba(195,155,255,.15);
+    animation:spinSlow 20s linear infinite;
+  }
+  .rune-dots{
+    position:absolute;width:100%;height:100%;inset:0;
+    animation:spinSlow 8s linear infinite;
+  }
+  .rune-dot{
+    position:absolute;width:6px;height:6px;border-radius:50%;
+    background:#9be5ff;box-shadow:0 0 10px #9be5ff;
+  }
+  .rune-dot:nth-child(1){top:-16px;left:50%;transform:translateX(-50%);}
+  .rune-dot:nth-child(2){bottom:-16px;left:50%;transform:translateX(-50%);}
+  .rune-dot:nth-child(3){left:-16px;top:50%;transform:translateY(-50%);}
+  .rune-dot:nth-child(4){right:-16px;top:50%;transform:translateY(-50%);}
+  .rune-dot:nth-child(5){top:-10px;right:20%;}
+  .rune-dot:nth-child(6){top:-10px;left:20%;}
+  .rune-dot:nth-child(7){bottom:-10px;right:20%;}
+  .rune-dot:nth-child(8){bottom:-10px;left:20%;}
+
+  @keyframes spinSlow{from{transform:rotate(0);}to{transform:rotate(360deg);}}
+  @keyframes floatGlow{
+    0%,100%{transform:translateY(0);filter:drop-shadow(0 0 20px #9be5ff);}
+    50%{transform:translateY(-10px);filter:drop-shadow(0 0 40px #c39bff);}
+  }
+
+  .cover-title{
+    font-size:56px;font-weight:bold;
+    background:linear-gradient(135deg,#9be5ff,#c39bff,#ffd86b);
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+    text-shadow:0 0 30px rgba(155,229,255,.3);
+    letter-spacing:6px;
+    animation:floatGlow 4s infinite ease-in-out;
+  }
+  .cover-sub{font-size:18px;color:#a8a8d0;letter-spacing:4px;}
+  .cover-sub small{font-size:13px;color:#6a6a90;}
+  .open-btn{
+    margin-top:12px;padding:16px 48px;font-size:19px;
+    background:linear-gradient(135deg,rgba(155,229,255,.12),rgba(195,155,255,.12));
+    color:#fff;border:2px solid #9be5ff;border-radius:50px;
+    cursor:pointer;letter-spacing:6px;
+    box-shadow:0 0 30px rgba(155,229,255,.3),inset 0 0 20px rgba(155,229,255,.1);
+    transition:all .3s;font-family:inherit;
+  }
+  .open-btn:hover{transform:scale(1.08);box-shadow:0 0 60px #9be5ff;}
+
+  /* ===== 书本 ===== */
+  .book-wrap{
+    position:relative;
+    width:1100px;max-width:95vw;
+    height:640px;max-height:85vh;
+    opacity:0;transition:opacity .8s;margin-top:0;
+  }
+  .book-wrap.show{opacity:1;}
+  .book{position:relative;width:100%;height:100%;transform-style:preserve-3d;}
+  .page{
+    position:absolute;top:0;left:50%;
+    width:50%;height:100%;
+    transform-origin:left center;
+    transform-style:preserve-3d;
+    transition:transform 1.1s cubic-bezier(.65,.05,.36,1);
+    background:linear-gradient(135deg,#1a1a3a 0%,#0f0f28 100%);
+    border:1px solid rgba(155,229,255,.2);
+    box-shadow:inset 0 0 60px rgba(0,0,0,.6);
+  }
+  .page.flipped{transform:rotateY(-180deg);}
+  .page-face{
+    position:absolute;inset:0;
+    backface-visibility:hidden;
+    padding:32px 36px;
+    overflow-y:auto;
+    display:flex;flex-direction:column;
+  }
+  .page-face::-webkit-scrollbar{width:4px;}
+  .page-face::-webkit-scrollbar-track{background:rgba(155,229,255,.05);border-radius:2px;}
+  .page-face::-webkit-scrollbar-thumb{background:rgba(155,229,255,.3);border-radius:2px;}
+  .page-front{}
+  .page-back{transform:rotateY(180deg);}
+  .page-front::before{content:'';position:absolute;top:0;bottom:0;left:0;width:30px;pointer-events:none;background:linear-gradient(90deg,rgba(0,0,0,.6),transparent);}
+  .page-back::before{content:'';position:absolute;top:0;bottom:0;right:0;width:30px;pointer-events:none;background:linear-gradient(270deg,rgba(0,0,0,.6),transparent);}
+  .spine{
+    position:absolute;left:50%;top:0;bottom:0;width:4px;
+    transform:translateX(-2px);
+    background:linear-gradient(to bottom,#9be5ff,#c39bff,#9be5ff);
+    box-shadow:0 0 20px #9be5ff;z-index:100;
+  }
+  .page-num{
+    position:absolute;bottom:14px;font-size:12px;color:#6a6a90;letter-spacing:2px;
+  }
+  .page-front .page-num{right:24px;}
+  .page-back .page-num{left:24px;}
+
+  /* ===== 导航栏 ===== */
+  .nav-bar{
+    display:flex;align-items:center;justify-content:center;
+    gap:14px;margin-top:10px;z-index:50;
+    opacity:0;transition:opacity .8s;transition-delay:.3s;
+    width:1100px;max-width:95vw;
+  }
+  .nav-bar.show{opacity:1;}
+  .nav-btn{
+    padding:8px 20px;font-size:13px;
+    background:rgba(155,229,255,.08);
+    color:#9be5ff;border:1px solid rgba(155,229,255,.3);border-radius:20px;
+    cursor:pointer;letter-spacing:2px;
+    transition:all .3s;font-family:inherit;white-space:nowrap;
+  }
+  .nav-btn:hover{background:rgba(155,229,255,.2);box-shadow:0 0 15px rgba(155,229,255,.3);}
+  .nav-btn:disabled{opacity:.25;cursor:not-allowed;}
+  .page-indicator{font-size:12px;color:#a8a8d0;letter-spacing:1px;white-space:nowrap;min-width:60px;text-align:center;}
+  /* 进度条滑块 */
+  .slider-wrap{flex:1;display:flex;align-items:center;gap:8px;max-width:360px;}
+  .slider-wrap label{font-size:11px;color:#6a6a90;white-space:nowrap;}
+  .slider{
+    -webkit-appearance:none;appearance:none;
+    flex:1;height:4px;border-radius:2px;
+    background:linear-gradient(90deg,rgba(155,229,255,.15),rgba(195,155,255,.15));
+    outline:none;cursor:pointer;
+  }
+  .slider::-webkit-slider-thumb{
+    -webkit-appearance:none;appearance:none;
+    width:16px;height:16px;border-radius:50%;
+    background:radial-gradient(circle at 30% 30%, #9be5ff, #6ab8ff);
+    box-shadow:0 0 12px rgba(155,229,255,.5);
+    cursor:pointer;border:2px solid rgba(255,255,255,.2);
+  }
+  .slider::-moz-range-thumb{
+    width:16px;height:16px;border-radius:50%;
+    background:radial-gradient(circle at 30% 30%, #9be5ff, #6ab8ff);
+    box-shadow:0 0 12px rgba(155,229,255,.5);
+    cursor:pointer;border:2px solid rgba(255,255,255,.2);
+  }
+
+  /* ===== 技能页样式 ===== */
+  .skill-header{display:flex;align-items:center;gap:14px;margin-bottom:14px;flex-shrink:0;}
+  .skill-icon{font-size:44px;filter:drop-shadow(0 0 12px currentColor);animation:floatGlow 3s infinite ease-in-out;flex-shrink:0;}
+  .skill-info{flex:1;min-width:0;}
+  .skill-name{
+    font-size:24px;font-weight:bold;
+    background:linear-gradient(135deg,#9be5ff,#c39bff);
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+  }
+  .skill-cn{font-size:13px;color:#a8a8d0;letter-spacing:2px;}
+  .skill-desc{
+    font-size:15px;line-height:1.8;color:#d8d8f0;
+    padding:14px 16px;border-left:3px solid #9be5ff;
+    background:rgba(155,229,255,.04);border-radius:0 6px 6px 0;
+    margin-bottom:12px;flex-shrink:0;
+  }
+  .skill-spell{
+    font-size:14px;color:#ffd86b;padding:12px 14px;
+    background:rgba(255,216,107,.04);
+    border:1px dashed rgba(255,216,107,.35);border-radius:6px;
+    font-style:italic;line-height:1.6;flex-shrink:0;
+  }
+  .skill-forbidden{
+    font-size:13px;color:#ff6b9b;padding:10px 12px;margin-top:10px;
+    background:rgba(255,107,155,.05);
+    border:1px solid rgba(255,107,155,.2);border-radius:6px;
+    line-height:1.5;flex-shrink:0;
+  }
+
+  /* 能量条 - 右页 */
+  .energy-section{margin-top:4px;flex-shrink:0;}
+  .section-title{
+    font-size:16px;color:#9be5ff;margin-bottom:12px;
+    letter-spacing:2px;display:flex;align-items:center;gap:8px;
+  }
+  .section-title::before,.section-title::after{
+    content:'';flex:1;height:1px;
+    background:linear-gradient(90deg,transparent,#9be5ff,transparent);
+  }
+  .energy-bar{margin-bottom:8px;}
+  .energy-label{
+    display:flex;justify-content:space-between;
+    font-size:12px;color:#c8c8e8;margin-bottom:3px;
+  }
+  .energy-track{
+    height:8px;background:rgba(255,255,255,.05);
+    border-radius:4px;overflow:hidden;position:relative;
+    border:1px solid rgba(155,229,255,.15);
+  }
+  .energy-fill{
+    height:100%;border-radius:4px;
+    background:linear-gradient(90deg,#9be5ff,#c39bff);
+    box-shadow:0 0 8px #9be5ff;
+    width:0;transition:width 1.5s ease-out;
+  }
+  .io-block{
+    margin-top:10px;padding:10px 12px;
+    background:rgba(195,155,255,.04);
+    border:1px solid rgba(195,155,255,.15);
+    border-radius:6px;flex-shrink:0;
+  }
+  .io-row{font-size:13px;line-height:1.7;color:#d8d8f0;}
+  .io-row b{color:#ffd86b;margin-right:6px;}
+
+  /* TOC */
+  .toc-title{
+    font-size:24px;text-align:center;margin-bottom:16px;
+    background:linear-gradient(135deg,#9be5ff,#c39bff);
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+    letter-spacing:4px;flex-shrink:0;
+  }
+  .toc-list{display:flex;flex-direction:column;gap:5px;flex:1;overflow-y:auto;padding-right:4px;}
+  .toc-item{
+    display:flex;align-items:center;gap:10px;
+    padding:7px 12px;font-size:13px;
+    background:rgba(155,229,255,.03);
+    border:1px solid rgba(155,229,255,.12);
+    border-radius:5px;color:#d8d8f0;
+    cursor:pointer;transition:all .2s;flex-shrink:0;
+  }
+  .toc-item:hover{background:rgba(155,229,255,.12);transform:translateX(3px);}
+  .toc-icon{font-size:20px;}
+  .toc-name{flex:1;}
+  .toc-pg{color:#9be5ff;font-size:11px;}
+
+  /* 测试页 */
+  .quiz-wrap{flex:1;display:flex;flex-direction:column;overflow:hidden;}
+  .quiz-title{
+    font-size:22px;text-align:center;margin-bottom:10px;
+    background:linear-gradient(135deg,#ffd86b,#ff9bd6);
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+    letter-spacing:3px;flex-shrink:0;
+  }
+  .quiz-scroll{flex:1;overflow-y:auto;padding-right:4px;}
+  .quiz-scroll::-webkit-scrollbar{width:4px;}
+  .quiz-scroll::-webkit-scrollbar-track{background:rgba(155,229,255,.05);border-radius:2px;}
+  .quiz-scroll::-webkit-scrollbar-thumb{background:rgba(155,229,255,.3);border-radius:2px;}
+  .quiz-q{
+    font-size:14px;color:#e8e8ff;margin-bottom:10px;
+    padding:10px 12px;background:rgba(255,255,255,.03);
+    border-radius:6px;
+  }
+  .quiz-q-text{margin-bottom:6px;color:#9be5ff;font-size:15px;font-weight:bold;}
+  .quiz-opt{
+    display:block;padding:6px 12px;margin:4px 0;font-size:13px;
+    background:rgba(155,229,255,.04);
+    border:1px solid rgba(155,229,255,.16);
+    border-radius:16px;cursor:pointer;
+    transition:all .2s;color:#d8d8f0;
+    font-family:inherit;text-align:left;width:100%;
+  }
+  .quiz-opt:hover{background:rgba(155,229,255,.12);}
+  .quiz-opt.selected{
+    background:linear-gradient(135deg,rgba(155,229,255,.25),rgba(195,155,255,.25));
+    border-color:#9be5ff;
+    box-shadow:0 0 10px rgba(155,229,255,.3);
+    color:#fff;
+  }
+  .cast-btn{
+    margin-top:8px;width:100%;padding:10px;
+    font-size:14px;letter-spacing:3px;
+    background:linear-gradient(135deg,#9be5ff,#c39bff);
+    color:#0a0a2a;border:none;border-radius:20px;
+    cursor:pointer;font-weight:bold;font-family:inherit;
+    transition:all .3s;flex-shrink:0;
+  }
+  .cast-btn:hover{transform:scale(1.02);box-shadow:0 0 20px #9be5ff;}
+  .cast-btn:disabled{opacity:.35;cursor:not-allowed;transform:none;box-shadow:none;}
+
+  /* 揭示区（右） */
+  .reveal-wrap{flex:1;display:flex;flex-direction:column;overflow:hidden;}
+  .reveal{
+    flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
+    text-align:center;gap:10px;padding:10px 0;
+  }
+  .reveal-icon{font-size:72px;animation:floatGlow 2s infinite;}
+  .reveal-name{
+    font-size:26px;
+    background:linear-gradient(135deg,#ffd86b,#9be5ff);
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+    letter-spacing:3px;
+  }
+  .reveal-desc{font-size:14px;color:#d8d8f0;line-height:1.7;padding:0 10px;}
+  .reveal-spell{font-size:13px;color:#ffd86b;padding:10px 14px;background:rgba(255,216,107,.04);border:1px dashed rgba(255,216,107,.3);border-radius:6px;font-style:italic;line-height:1.5;max-width:90%;}
+  .reveal-hint{font-size:12px;color:#a8a8d0;font-style:italic;}
+  .reveal-empty{color:#6a6a90;font-size:14px;letter-spacing:2px;line-height:1.8;}
+  .biu{
+    position:absolute;inset:0;pointer-events:none;
+    display:flex;align-items:center;justify-content:center;
+    opacity:0;z-index:5;
+  }
+  .biu.flash{animation:biuFlash 1.2s ease-out;}
+  @keyframes biuFlash{
+    0%{opacity:0;transform:scale(.3);}
+    30%{opacity:1;transform:scale(1.4);filter:drop-shadow(0 0 50px #fff);}
+    100%{opacity:0;transform:scale(2.5);}
+  }
+
+  /* 封底 */
+  .back-title{
+    font-size:22px;text-align:center;margin-bottom:12px;
+    color:#ff6b9b;letter-spacing:3px;
+    text-shadow:0 0 15px rgba(255,107,155,.4);flex-shrink:0;
+  }
+  .back-scroll{flex:1;overflow-y:auto;padding-right:4px;}
+  .back-scroll::-webkit-scrollbar{width:4px;}
+  .back-scroll::-webkit-scrollbar-thumb{background:rgba(255,107,155,.3);border-radius:2px;}
+  .forbidden-item{
+    padding:10px 12px;margin:6px 0;font-size:13px;
+    background:rgba(255,107,155,.05);
+    border-left:3px solid #ff6b9b;border-radius:0 5px 5px 0;
+    color:#e8e8ff;line-height:1.5;flex-shrink:0;
+  }
+  .forbidden-item b{color:#ff6b9b;}
+  .end-mark{
+    text-align:center;font-size:16px;color:#9be5ff;
+    letter-spacing:4px;margin-top:auto;padding:14px 0;
+    animation:floatGlow 3s infinite;flex-shrink:0;
+  }
+</style>
+</head>
+<body>
+
+<div id="stars"></div>
+
+<!-- ===== 封面 ===== -->
+<div class="cover-screen" id="cover">
+  <div class="cover-art">
+    <div class="cover-ring2"></div>
+    <div class="cover-ring"></div>
+    <div class="rune-dots">
+      <div class="rune-dot"></div><div class="rune-dot"></div>
+      <div class="rune-dot"></div><div class="rune-dot"></div>
+      <div class="rune-dot"></div><div class="rune-dot"></div>
+      <div class="rune-dot"></div><div class="rune-dot"></div>
+    </div>
+    <div class="cover-art-inner"></div>
+  </div>
+  <div class="cover-title">元技能魔法书</div>
+  <div class="cover-sub">
+    OpenSquilla · Meta-Skill Grimoire<br>
+    <small>—— 孩子的第一本 AI 咒语指南 ——</small>
+  </div>
+  <button class="open-btn" onclick="openBook()">📖 翻开魔法书</button>
+</div>
+
+<!-- ===== 书 + 导航 ===== -->
+<div class="book-wrap" id="bookWrap">
+  <div class="book" id="book"></div>
+  <div class="spine"></div>
+</div>
+<div class="nav-bar" id="navBar">
+  <button class="nav-btn" id="prevBtn" onclick="flipPrev()">◀ 上一页</button>
+  <div class="slider-wrap">
+    <label>📌</label>
+    <input type="range" class="slider" id="pageSlider" min="0" max="0" value="0" oninput="sliderChange(this.value)">
+  </div>
+  <span class="page-indicator" id="pageIndicator">0 / 0</span>
+  <button class="nav-btn" id="nextBtn" onclick="flipNext()">下一页 ▶</button>
+</div>
+
+<script>
+// ===== 星空 =====
+const starsBox=document.getElementById('stars');
+for(let i=0;i<120;i++){
+  const s=document.createElement('div');s.className='star';
+  const sz=Math.random()*2+0.5;
+  s.style.width=sz+'px';s.style.height=sz+'px';
+  s.style.left=Math.random()*100+'vw';s.style.top=Math.random()*100+'vh';
+  s.style.animationDelay=Math.random()*3+'s';s.style.opacity=Math.random()*.6+.2;
+  starsBox.appendChild(s);
+}
+
+// ===== 9 个元技能 =====
+const skills = [
+  {
+    id:'creator',icon:'✨',color:'#9be5ff',
+    name:'造技魔典',cn:'meta-skill-creator',
+    desc:'这个咒语是最厉害的秘密魔法之一！它能让你自己创造新的咒语！告诉它你想要一个什么样的小帮手，它就会"叮"的一声变出一个全新的技能给你！',
+    spell:'"汝需新术？吾予之法——咒语之源，由尔创造！"',
+    energy:{'🔍搜索':40,'🧠动脑':90,'✍️写作':50,'🎨创意':80,'👁️观察':30,'🗣️沟通':20},
+    inputs:'一个新技能的"配方"想法',
+    outputs:'一个可以在AI里用的新咒语（技能卡）',
+    forbidden:'不要让AI自己创造太多复杂咒语！每次新咒语都要你亲自确认名字和用途。'
+  },
+  {
+    id:'research',icon:'🌐',color:'#6bffb8',
+    name:'网海寻真咒',cn:'meta-web-research-to-report',
+    desc:'需要在网上查资料写报告吗？念这个咒语，AI就会像一只勤劳的小蜜蜂，飞到上千个网页里采蜜，然后把花蜜酿成一份香喷喷的报告给你！',
+    spell:'"网海茫茫，真知何在？采撷万象，凝为一卷。"',
+    energy:{'🔍搜索':95,'🧠动脑':70,'✍️写作':80,'🎨创意':40,'👁️观察':60,'🗣️沟通':10},
+    inputs:'你想研究的主题 + 要搜哪些关键词',
+    outputs:'一份整整齐齐的调研报告',
+    forbidden:'不能查别人的隐私！不能闯进需要密码的网站！不能编造假信息！'
+  },
+  {
+    id:'watch',icon:'🦉',color:'#ffd86b',
+    name:'守望之眼',cn:'meta-account-watch',
+    desc:'你想盯住某个东西，看它有没有变化？比如喜欢的博主有没有更新？这个咒语会像一只忠诚的猫头鹰，每天蹲在树梢上帮你盯着，一有变化就告诉你！',
+    spell:'"日月轮转，万物更迭——吾眼如炬，寸变必察。"',
+    energy:{'🔍搜索':60,'🧠动脑':60,'✍️写作':30,'🎨创意':20,'👁️观察':100,'🗣️沟通':10},
+    inputs:'你想观察的公司、账号或竞品是谁',
+    outputs:'一份变化追踪报告（什么变了、什么时候变的）',
+    forbidden:'不要用它偷看别人的隐私！只能观察公开的信息！'
+  },
+  {
+    id:'brief',icon:'📋',color:'#9be5ff',
+    name:'每日简报术',cn:'meta-daily-operator-brief',
+    desc:'每天早上念这个咒语，AI会帮你把今天要做的事、重要提醒、天气情况等整理成一张"藏宝图"，让你一眼就知道今天要怎么过！',
+    spell:'"晨光熹微，万象更新——一日之要，尽在卷中。"',
+    energy:{'🔍搜索':50,'🧠动脑':60,'✍️写作':70,'🎨创意':30,'👁️观察':50,'🗣️沟通':40},
+    inputs:'你的日历、邮件、待办清单',
+    outputs:'一份今天的行动简报',
+    forbidden:'不要把太私密的事情写进简报！看清内容再分享！'
+  },
+  {
+    id:'decision',icon:'📜',color:'#c39bff',
+    name:'文思决断咒',cn:'meta-document-to-decision',
+    desc:'看到一份长长的文档感觉头大？这个咒语会把整篇文章吃掉，然后吐出一个"下一步做什么"的聪明建议，就像有一个军师在你旁边！',
+    spell:'"文字万千，歧路何从？剖文析理，一言决之。"',
+    energy:{'🔍搜索':30,'🧠动脑':100,'✍️写作':80,'🎨创意':30,'👁️观察':60,'🗣️沟通':20},
+    inputs:'一份需要分析的文档',
+    outputs:'决策建议 + 它为什么这么想',
+    forbidden:'重要的决定要让大人一起拿主意！AI只是给建议，不是替你拍板！'
+  },
+  {
+    id:'family',icon:'🏠',color:'#ff9bd6',
+    name:'一家之主咒',cn:'meta-family-day-coordinator',
+    desc:'周末到了，不知道全家去哪玩？这个咒语像一位贴心的小管家，会问每个人想去做什么，然后排出一个大家都满意的全天计划！',
+    spell:'"吾家有约，众口难调——汝心所愿，吾皆安排。"',
+    energy:{'🔍搜索':40,'🧠动脑':50,'✍️写作':50,'🎨创意':70,'👁️观察':30,'🗣️沟通':90},
+    inputs:'家庭成员 + 空闲时间 + 想做的事情',
+    outputs:'一份全家一天的活动日程表',
+    forbidden:'别忘了跟真实家人确认！AI排的计划只是建议。安全第一！'
+  },
+  {
+    id:'job',icon:'🚀',color:'#6bffb8',
+    name:'求职航路咒',cn:'meta-job-search-pipeline',
+    desc:'这个咒语是为你爸爸妈妈准备的（当然你以后也用得上）！找工作的时候，它会帮你管理简历、搜索工作、跟踪面试，就像闯关游戏一样！',
+    spell:'"千帆竞渡，吾择其舟——职海茫茫，引汝登岸。"',
+    energy:{'🔍搜索':80,'🧠动脑':70,'✍️写作':90,'🎨创意':40,'👁️观察':50,'🗣️沟通':60},
+    inputs:'你想做什么工作 + 你会什么',
+    outputs:'求职进度跟踪 + 简历建议',
+    forbidden:'不能让它替你投简历！每份申请都要自己最后确认！'
+  },
+  {
+    id:'kid',icon:'🎯',color:'#ffd86b',
+    name:'童趣规划术',cn:'meta-kid-project-planner',
+    desc:'这个咒语是专门为你定制的！学校有项目要交？想策划一个生日派对？它会帮你想出一堆好点子，然后一步一步教你怎么做到！',
+    spell:'"童梦可期，万物可造——小小计划，大大成就。"',
+    energy:{'🔍搜索':30,'🧠动脑':60,'✍️写作':60,'🎨创意':90,'👁️观察':40,'🗣️沟通':50},
+    inputs:'你想做的项目 / 活动的点子',
+    outputs:'一份适合小孩的步骤计划书',
+    forbidden:'不能让它帮你写作业！它是帮你规划，不是替你完成！'
+  },
+  {
+    id:'paper',icon:'📖',color:'#c39bff',
+    name:'论文召唤咒',cn:'meta-paper-write',
+    desc:'这个咒语是給大哥哥大姐姐上大学用的！写论文的时候，它可以帮你搜资料、理思路、写出漂亮的学术文章。你现在可以先收藏，以后用得上！',
+    spell:'"学海无涯，纸笔为舟——引经据典，自成文章。"',
+    energy:{'🔍搜索':90,'🧠动脑':90,'✍️写作':100,'🎨创意':50,'👁️观察':50,'🗣️沟通':20},
+    inputs:'论文题目 + 要参考的资料',
+    outputs:'一篇学术论文（含格式）',
+    forbidden:'学校里一般不许AI直接写论文，一定要先问老师！只能帮忙不能代写！'
+  }
+];
+
+const forbidden = [
+  {t:'不要创造危险咒语',d:'不能创造会伤害别人或泄露隐私的新咒语。每个新技能都要经过主人审核！'},
+  {t:'不要代替你做决定',d:'拿钱、选学校、看病这些大事，AI只给建议，最后要你和大人一起决定。'},
+  {t:'不要违反学校规则',d:'不能让AI帮你写作业或考试。它只能帮你查资料和规划！'},
+  {t:'不要偷偷观察真人',d:'"守望之眼"只能看公开的公司或账号信息，不能跟踪真人的隐私。'},
+  {t:'不要代替你沟通',d:'和家人的事情，要和家人亲自说。AI不能替你给爸妈传话！'},
+  {t:'不要自作主张',d:'AI只出建议和方案，最后按不按它说的做，都是你说了算！'}
+];
+
+// ===== 测试题 =====
+const quizQs = [
+  {
+    q:'你有什么需求？',
+    opts:[
+      {t:'✨ 我想创造一个新能力 / 新工具',skill:'creator'},
+      {t:'🌐 我需要查资料写一份报告',skill:'research'},
+      {t:'🦉 我想盯着某个东西看它变没变',skill:'watch'},
+      {t:'📋 我需要一份今天的行动清单',skill:'brief'},
+      {t:'📜 我有一份很长的文档需要分析',skill:'decision'},
+      {t:'🏠 我想安排全家人出去玩一天',skill:'family'},
+      {t:'🚀 我在找工作 / 或者帮爸妈找',skill:'job'},
+      {t:'🎯 我有学校项目 / 活动要规划',skill:'kid'},
+      {t:'📖 我需要写论文 / 学术文章',skill:'paper'},
+    ]
+  }
+];
+
+// ===== 构建页面 =====
+const pagesData=[];
+pagesData.push({type:'blank'});
+pagesData.push({type:'toc',start:0,end:5,title:'📜 咒 语 目 录 · 壹'});
+pagesData.push({type:'toc',start:5,end:skills.length,title:'📜 咒 语 目 录 · 贰',showQuiz:true});
+skills.forEach(s=>{
+  pagesData.push({type:'skill-l',skill:s});
+  pagesData.push({type:'skill-r',skill:s});
+});
+pagesData.push({type:'quiz-l'});
+pagesData.push({type:'quiz-r'});
+pagesData.push({type:'back'});
+
+const book=document.getElementById('book');
+const totalSheets=Math.ceil(pagesData.length/2);
+const slider=document.getElementById('pageSlider');
+slider.min=1;
+slider.max=totalSheets-1;
+
+const sheets=[];
+for(let i=0;i<totalSheets;i++){
+  const sheet=document.createElement('div');sheet.className='page';
+  sheet.style.zIndex=totalSheets-i;
+  const front=document.createElement('div');front.className='page-face page-front';
+  front.innerHTML=renderPage(pagesData[i*2],i*2);
+  const back=document.createElement('div');back.className='page-face page-back';
+  back.innerHTML=pagesData[i*2+1]?renderPage(pagesData[i*2+1],i*2+1):'';
+  sheet.appendChild(front);sheet.appendChild(back);
+  book.appendChild(sheet);sheets.push(sheet);
+}
+
+function renderPage(data,pageNum){
+  if(!data) return '';
+  const pg=`<div class="page-num">— ${pageNum+1} —</div>`;
+  if(data.type==='blank') return '';
+  if(data.type==='toc'){
+    return `<div class="toc-title">${data.title}</div>
+      <div class="toc-list">${skills.slice(data.start,data.end).map((s,index)=>{
+        const i=data.start+index;
+        return `
+        <div class="toc-item" onclick="jumpTo(${3+i*2})">
+          <span class="toc-icon">${s.icon}</span>
+          <span class="toc-name">${s.name} <small style="color:#888;">${s.cn}</small></span>
+          <span class="toc-pg">P.${4+i*2}</span>
+        </div>`}).join('')}
+        ${data.showQuiz?`<div class="toc-item" onclick="jumpTo(${3+skills.length*2})" style="border-color:#ffd86b;color:#ffd86b;">
+          <span class="toc-icon">🔮</span><span class="toc-name">💫 咒语测试</span>
+          <span class="toc-pg">P.${4+skills.length*2}</span>
+        </div>`:''}
+      </div>${pg}`;
+  }
+  if(data.type==='skill-l'){
+    const s=data.skill;
+    return `<div class="skill-header">
+        <div class="skill-icon" style="color:${s.color}">${s.icon}</div>
+        <div class="skill-info">
+          <div class="skill-name">${s.name}</div>
+          <div class="skill-cn">${s.cn}</div>
+        </div>
+      </div>
+      <div class="skill-desc">${s.desc}</div>
+      <div class="skill-spell">${s.spell}</div>
+      <div class="skill-forbidden">⚠️ ${s.forbidden}</div>${pg}`;
+  }
+  if(data.type==='skill-r'){
+    const s=data.skill;
+    const bars=Object.entries(s.energy).map(([k,v])=>`
+      <div class="energy-bar">
+        <div class="energy-label"><span>${k}</span><span>${v}%</span></div>
+        <div class="energy-track"><div class="energy-fill" data-w="${v}"></div></div>
+      </div>`).join('');
+    return `<div class="energy-section">
+        <div class="section-title">⚡ 能 量 配 比 ⚡</div>
+        ${bars}
+      </div>
+      <div class="io-block">
+        <div class="io-row"><b>📥 材料（输入）：</b>${s.inputs}</div>
+        <div class="io-row"><b>📤 产物（输出）：</b>${s.outputs}</div>
+      </div>${pg}`;
+  }
+  if(data.type==='quiz-l'){
+    return `<div class="quiz-title">🔮 该用哪个咒语？</div>
+      <div class="quiz-wrap">
+        <div class="quiz-scroll" id="quizScroll">
+          ${quizQs.map((q,qi)=>`
+            <div class="quiz-q">
+              <div class="quiz-q-text">${qi+1}. ${q.q}</div>
+              ${q.opts.map((o,oi)=>`<button class="quiz-opt" data-q="${qi}" data-o="${oi}" onclick="pickOpt(this)">${o.t}</button>`).join('')}
+            </div>`).join('')}
+        </div>
+        <button class="cast-btn" id="castBtn" onclick="castSpell()" disabled>✨ 施 放 咒 语 ✨</button>
+      </div>${pg}`;
+  }
+  if(data.type==='quiz-r'){
+    return `<div class="biu" id="biu"><div class="biu-char">✨</div></div>
+      <div class="reveal-wrap">
+        <div class="reveal" id="reveal">
+          <div class="reveal-empty">⟵ 在左边完成选择后<br/>这里会浮现你的咒语 ✨</div>
+        </div>
+      </div>${pg}`;
+  }
+  if(data.type==='back'){
+    return `<div class="back-title">⚠ 禁 用 咒 语 ⚠</div>
+      <div class="back-scroll">
+        ${forbidden.map(f=>`<div class="forbidden-item"><b>✘ ${f.t}</b><br>${f.d}</div>`).join('')}
+      </div>
+      <div class="end-mark">— 🦐 魔法书终 —</div>${pg}`;
+  }
+  return '';
+}
+
+// ===== 翻页 =====
+let currentSpread=1;
+
+function updatePages(){
+  sheets.forEach((sh,i)=>{
+    if(i<currentSpread){
+      sh.classList.add('flipped');
+      sh.style.zIndex=i+1;
+    }else{
+      sh.classList.remove('flipped');
+      sh.style.zIndex=sheets.length-i;
+    }
+  });
+  document.getElementById('pageIndicator').textContent=`${currentSpread+1} / ${sheets.length}`;
+  document.getElementById('prevBtn').disabled=currentSpread===1;
+  document.getElementById('nextBtn').disabled=currentSpread>=sheets.length-1;
+  slider.value=currentSpread;
+  // 触发能量条动画
+  setTimeout(()=>{
+    const visiblePages=[currentSpread*2,currentSpread*2+1];
+    visiblePages.forEach(pn=>{
+      const idx=Math.floor(pn/2);
+      const isBack=pn%2===1;
+      if(!sheets[idx])return;
+      const face=sheets[idx].querySelector(isBack?'.page-back':'.page-front');
+      if(!face)return;
+      face.querySelectorAll('.energy-fill').forEach(el=>{
+        el.style.width=el.dataset.w+'%';
+      });
+    });
+  },400);
+}
+
+function flipNext(){if(currentSpread<sheets.length-1){currentSpread++;updatePages();}}
+function flipPrev(){if(currentSpread>1){currentSpread--;updatePages();}}
+function jumpTo(pageNum){
+  currentSpread=Math.floor(pageNum/2);
+  updatePages();
+}
+function sliderChange(val){
+  currentSpread=parseInt(val);
+  updatePages();
+}
+
+// ===== 封面 =====
+function openBook(){
+  document.getElementById('cover').classList.add('hidden');
+  document.getElementById('bookWrap').classList.add('show');
+  document.getElementById('navBar').classList.add('show');
+  updatePages();
+}
+
+// ===== 测试逻辑 =====
+const picks={};
+function pickOpt(btn){
+  const qi=btn.dataset.q,oi=btn.dataset.o;
+  document.querySelectorAll(`.quiz-opt[data-q="${qi}"]`).forEach(b=>b.classList.remove('selected'));
+  btn.classList.add('selected');
+  picks[qi]=oi;
+  if(Object.keys(picks).length===quizQs.length){
+    document.getElementById('castBtn').disabled=false;
+  }
+}
+function castSpell(){
+  const finalKey=quizQs[0].opts[picks[0]].skill;
+  const sk=skills.find(s=>s.id===finalKey);
+  // 闪光特效
+  const biu=document.getElementById('biu');
+  biu.classList.remove('flash');void biu.offsetWidth;biu.classList.add('flash');
+  setTimeout(()=>{
+    const reveal=document.getElementById('reveal');
+    reveal.innerHTML=`
+      <div class="reveal-icon" style="color:${sk.color}">${sk.icon}</div>
+      <div class="reveal-name">${sk.name}</div>
+      <div class="reveal-desc">${sk.desc}</div>
+      <div class="reveal-spell">${sk.spell}</div>
+      <div class="reveal-hint">✨ 想再测一次？点左边选项重新选吧 ✨</div>`;
+    // 滚动到右边可见
+    setTimeout(()=>{
+      // 找到当前的 quiz-r sheet 确保 reveal 可见
+      const quizSheetIdx=Math.floor((1+skills.length*2+1)/2); // page 20 → sheet 10
+      // 如果不在当前 spread，跳过去
+    },100);
+  },600);
+}
+
+// ===== 键盘翻页 =====
+document.addEventListener('keydown',e=>{
+  if(document.getElementById('cover').classList.contains('hidden')){
+    if(e.key==='ArrowRight')flipNext();
+    if(e.key==='ArrowLeft')flipPrev();
+  }
+});
+</script>
+</body>
+</html>
