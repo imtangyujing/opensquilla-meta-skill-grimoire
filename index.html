@@ -470,7 +470,7 @@ for(let i=0;i<120;i++){
   starsBox.appendChild(s);
 }
 
-// ===== 8 个元技能 =====
+// ===== 9 个元技能 =====
 const skills = [
   {
     id:'creator',icon:'✨',color:'#9be5ff',
@@ -498,7 +498,7 @@ const skills = [
   },
   {
     id:'watch',icon:'🦉',color:'#ffd86b',
-    name:'守望之眼',cn:'meta-competitive-intel',
+    name:'守望之眼',cn:'meta-account-watch',
     desc:'想观察公司、竞品、客户或合作伙伴有没有新动作？这个咒语会检查公开信息，把价格、产品、团队和新闻中的变化整理成一份情报简报！',
     spell:'"日月轮转，万物更迭——吾眼如炬，寸变必察。"',
     energy:{'🔍搜索':60,'🧠动脑':60,'✍️写作':30,'🎨创意':20,'👁️观察':100,'🗣️沟通':10},
@@ -531,6 +531,18 @@ const skills = [
     mechanism:'先识别 PDF、Word、表格或粘贴文字，再抽取金额、日期、义务和矛盾点，整理证据表与风险等级，最后给出未来 24 小时可执行动作。',
     ingredients:['pdf-toolkit','docx','xlsx','证据表','风险审查','最终审校'],
     forbidden:'重要的决定要让大人一起拿主意！AI只是给建议，不是替你拍板！'
+  },
+  {
+    id:'family',icon:'🏡',color:'#ff9fd6',
+    name:'全家协奏术',cn:'meta-family-day-coordinator',
+    desc:'明天家里事情很多，不知道怎么排？这个咒语会把接送、上学、买东西、吃饭、休息和提醒整理成一份全家行动计划，让每个人都知道什么时候该做什么！',
+    spell:'"晨昏有序，家事相和——一日百务，各归其时。"',
+    energy:{'🔍搜索':40,'🧠动脑':80,'✍️写作':50,'🎨创意':40,'👁️观察':70,'🗣️沟通':80},
+    inputs:'日期 + 家庭成员 + 固定安排 + 要处理的家事',
+    outputs:'一份带时间块、接送事项和提醒对象的家庭计划',
+    mechanism:'先确认日期、地点和固定安排，再参考天气与家庭习惯，把接送、家事、饮食和休息排成时间块；遇到信息缺失时会明确提醒你补充确认。',
+    ingredients:['weather','memory','日历连接器（可选）','路线连接器（可选）','家庭事项整理','提醒建议'],
+    forbidden:'不能替家人擅自做决定！涉及健康、安全和接送的信息，要和大人逐项确认！'
   },
   {
     id:'job',icon:'🚀',color:'#6bffb8',
@@ -589,6 +601,7 @@ const quizQs = [
       {t:'🦉 我想盯着某个东西看它变没变',skill:'watch'},
       {t:'📋 我需要一份今天的行动清单',skill:'brief'},
       {t:'📜 我有一份很长的文档需要分析',skill:'decision'},
+      {t:'🏡 我想安排全家一天的事情',skill:'family'},
       {t:'🚀 我在找工作 / 或者帮爸妈找',skill:'job'},
       {t:'🎯 我有学校项目 / 活动要规划',skill:'kid'},
       {t:'📖 我需要写论文 / 学术文章',skill:'paper'},
@@ -599,8 +612,8 @@ const quizQs = [
 // ===== 构建页面 =====
 const pagesData=[];
 pagesData.push({type:'blank'});
-pagesData.push({type:'toc',start:0,end:4,title:'📜 咒 语 目 录 · 壹'});
-pagesData.push({type:'toc',start:4,end:skills.length,title:'📜 咒 语 目 录 · 贰'});
+pagesData.push({type:'toc',start:0,end:5,title:'📜 咒 语 目 录 · 壹'});
+pagesData.push({type:'toc',start:5,end:skills.length,title:'📜 咒 语 目 录 · 贰',showQuiz:true});
 skills.forEach(s=>{
   pagesData.push({type:'skill-l',skill:s});
   pagesData.push({type:'skill-r',skill:s});
